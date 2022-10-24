@@ -1,13 +1,13 @@
 import {
-  ApplicationRef,
-  ComponentFactoryResolver,
-  ComponentRef,
   Directive,
-  ElementRef,
-  EmbeddedViewRef,
-  HostListener,
   Injector,
   Input,
+  ApplicationRef,
+  ElementRef,
+  ComponentRef,
+  ComponentFactoryResolver,
+  EmbeddedViewRef,
+  HostListener,
   ViewContainerRef
 } from '@angular/core';
 import { TooltipComponent } from './tooltip.component';
@@ -19,28 +19,27 @@ import { TooltipPosition, TooltipTheme } from './tooltip.enums';
 export class TooltipDirective {
 
   constructor(
-    private elementRef: ElementRef,
-    private appRef: ApplicationRef,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private injector: Injector,
-    private vcr: ViewContainerRef
+    private appRef: ApplicationRef,
+    private elRef: ElementRef,
+    private cmptFactoryResolver: ComponentFactoryResolver
   ) {
   }
 
-  @Input() tooltip = '';
+  @Input() tooltip: string = '';
   @Input() position: TooltipPosition = TooltipPosition.DEFAULT;
   @Input() theme: TooltipTheme = TooltipTheme.DEFAULT;
-  @Input() showDelay = 0;
-  @Input() hideDelay = 0;
-
-  private componentRef: ComponentRef<any> | null = null;
+  @Input() showDelay: number = 0;
+  @Input() hideDelay: number = 0;
+ 
+  private cmptRef: ComponentRef<any> | null = null;
   private showTimeout?: number;
   private hideTimeout?: number;
   private touchTimeout?: number;
 
   @HostListener('mouseenter')
   onMouseEnter(): void {
-    this.initializeTooltip();
+    this.initTooltip();
   }
 
   @HostListener('mouseleave')
@@ -50,10 +49,10 @@ export class TooltipDirective {
 
   @HostListener('mousemove', ['$event'])
   onMouseMove($event: MouseEvent): void {
-    if (this.componentRef !== null && this.position === TooltipPosition.DYNAMIC) {
-      this.componentRef.instance.left = $event.clientX;
-      this.componentRef.instance.top = $event.clientY;
-      this.componentRef.instance.tooltip = this.tooltip;
+    if (this.cmptRef !== null && this.position === TooltipPosition.DYNAMIC) {
+      this.cmptRef.instance.left = $event.clientX;
+      this.cmptRef.instance.top = $event.clientY;
+      this.cmptRef.instance.tooltip = this.tooltip;
     }
   }
 
@@ -61,7 +60,7 @@ export class TooltipDirective {
   onTouchStart($event: TouchEvent): void {
     $event.preventDefault();
     window.clearTimeout(this.touchTimeout);
-    this.touchTimeout = window.setTimeout(this.initializeTooltip.bind(this), 500);
+    this.touchTimeout = window.setTimeout(this.initTooltip.bind(this), 500);
   }
 
   @HostListener('touchend')
@@ -70,49 +69,49 @@ export class TooltipDirective {
     this.setHideTooltipTimeout();
   }
 
-  private initializeTooltip(): void  {
-    if (this.componentRef === null) {
+  private initTooltip(): void  {
+    if (this.cmptRef === null) {
       window.clearInterval(this.hideDelay);
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(TooltipComponent);
-      this.componentRef = componentFactory.create(this.injector);
+      const componentFactory = this.cmptFactoryResolver.resolveComponentFactory(TooltipComponent);
+      this.cmptRef = componentFactory.create(this.injector);
 
-      this.appRef.attachView(this.componentRef.hostView);
-      const [tooltipDOMElement] = (this.componentRef.hostView as EmbeddedViewRef<any>).rootNodes;
+      this.appRef.attachView(this.cmptRef.hostView);
+      const [tooltipDOMElement] = (this.cmptRef.hostView as EmbeddedViewRef<any>).rootNodes;
 
       this.setTooltipComponentProperties();
 
       document.body.appendChild(tooltipDOMElement);
-      this.showTimeout = window.setTimeout(this.showTooltip.bind(this), this.showDelay);
+      this.showTimeout = window.setTimeout(this.show.bind(this), this.showDelay);
     }
   }
 
   private setTooltipComponentProperties(): void  {
-    if (this.componentRef !== null) {
-      this.componentRef.instance.tooltip = this.tooltip;
-      this.componentRef.instance.position = this.position;
-      this.componentRef.instance.theme = this.theme;
+    if (this.cmptRef !== null) {
+      this.cmptRef.instance.tooltip = this.tooltip;
+      this.cmptRef.instance.position = this.position;
+      this.cmptRef.instance.theme = this.theme;
 
-      const {left, right, top, bottom} = this.elementRef.nativeElement.getBoundingClientRect();
+      const {left, right, top, bottom} = this.elRef.nativeElement.getBoundingClientRect();
 
       switch (this.position) {
         case TooltipPosition.BOTTOM: {
-          this.componentRef.instance.left = Math.round((right - left) / 2 + left);
-          this.componentRef.instance.top = Math.round(bottom);
+          this.cmptRef.instance.left = Math.round((right - left) / 2 + left);
+          this.cmptRef.instance.top = Math.round(bottom);
           break;
         }
         case TooltipPosition.TOP: {
-          this.componentRef.instance.left = Math.round((right - left) / 2 + left);
-          this.componentRef.instance.top = Math.round(top);
+          this.cmptRef.instance.left = Math.round((right - left) / 2 + left);
+          this.cmptRef.instance.top = Math.round(top);
           break;
         }
         case TooltipPosition.RIGHT: {
-          this.componentRef.instance.left = Math.round(right);
-          this.componentRef.instance.top = Math.round(top + (bottom - top) / 2);
+          this.cmptRef.instance.left = Math.round(right);
+          this.cmptRef.instance.top = Math.round(top + (bottom - top) / 2);
           break;
         }
         case TooltipPosition.LEFT: {
-          this.componentRef.instance.left = Math.round(left);
-          this.componentRef.instance.top = Math.round(top + (bottom - top) / 2);
+          this.cmptRef.instance.left = Math.round(left);
+          this.cmptRef.instance.top = Math.round(top + (bottom - top) / 2);
           break;
         }
         default: {
@@ -122,9 +121,9 @@ export class TooltipDirective {
     }
   }
 
-  private showTooltip(): void  {
-    if (this.componentRef !== null) {
-      this.componentRef.instance.visible = true;
+  private show(): void  {
+    if (this.cmptRef !== null) {
+      this.cmptRef.instance.visible = true;
     }
   }
 
@@ -132,17 +131,18 @@ export class TooltipDirective {
     this.hideTimeout = window.setTimeout(this.destroy.bind(this), this.hideDelay);
   }
 
+  destroy(): void {
+    if (this.cmptRef !== null) {
+      window.clearInterval(this.showTimeout);
+      window.clearInterval(this.hideDelay);
+      this.appRef.detachView(this.cmptRef.hostView);
+      this.cmptRef.destroy();
+      this.cmptRef = null;
+    }
+  }
+
   ngOnDestroy(): void {
     this.destroy();
   }
 
-  destroy(): void {
-    if (this.componentRef !== null) {
-      window.clearInterval(this.showTimeout);
-      window.clearInterval(this.hideDelay);
-      this.appRef.detachView(this.componentRef.hostView);
-      this.componentRef.destroy();
-      this.componentRef = null;
-    }
-  }
 }

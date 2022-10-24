@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { TooltipPosition } from './shared/tooltip/tooltip.enums';
+import { TooltipPosition, TooltipTheme } from './shared/tooltip/tooltip.enums';
 
 
 @Component({
@@ -9,8 +9,10 @@ import { TooltipPosition } from './shared/tooltip/tooltip.enums';
 })
 export class AppComponent {
 
-  title = 'angular-tooltips-tutorial';
-  TooltipPosition: typeof TooltipPosition = TooltipPosition;
+  title = 'Angular Components!';
+
+  ttpPosition = TooltipPosition;
+  ttipTheme = TooltipTheme;
   x = 0;
   y = 0;
   coordinates = '';
