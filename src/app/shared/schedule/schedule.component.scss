@@ -1,0 +1,27 @@
+.calendar {
+    position: relative;
+    width: 100%;
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem;
+    }
+    &__title {
+        color: #1D2233;
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+    }
+    &__controls {
+        & > div {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+    &__buttons {
+        margin-left: 1.6rem;
+        & > .btn {
+            display: inline-block;
+        }
+    }
+}

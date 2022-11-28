@@ -39,7 +39,7 @@ export class TooltipDirective {
 
   @HostListener('mouseenter')
   onMouseEnter(): void {
-    this.initTooltip();
+    this.init();
   }
 
   @HostListener('mouseleave')
@@ -60,7 +60,7 @@ export class TooltipDirective {
   onTouchStart($event: TouchEvent): void {
     $event.preventDefault();
     window.clearTimeout(this.touchTimeout);
-    this.touchTimeout = window.setTimeout(this.initTooltip.bind(this), 500);
+    this.touchTimeout = window.setTimeout(this.init.bind(this), 500);
   }
 
   @HostListener('touchend')
@@ -69,7 +69,7 @@ export class TooltipDirective {
     this.setHideTooltipTimeout();
   }
 
-  private initTooltip(): void  {
+  private init(): void  {
     if (this.cmptRef === null) {
       window.clearInterval(this.hideDelay);
       const componentFactory = this.cmptFactoryResolver.resolveComponentFactory(TooltipComponent);
@@ -78,14 +78,14 @@ export class TooltipDirective {
       this.appRef.attachView(this.cmptRef.hostView);
       const [tooltipDOMElement] = (this.cmptRef.hostView as EmbeddedViewRef<any>).rootNodes;
 
-      this.setTooltipComponentProperties();
+      this.setProperties();
 
       document.body.appendChild(tooltipDOMElement);
       this.showTimeout = window.setTimeout(this.show.bind(this), this.showDelay);
     }
   }
 
-  private setTooltipComponentProperties(): void  {
+  private setProperties(): void  {
     if (this.cmptRef !== null) {
       this.cmptRef.instance.tooltip = this.tooltip;
       this.cmptRef.instance.position = this.position;

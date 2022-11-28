@@ -1,0 +1,58 @@
+<div class="calendar">
+    <div class="calendar__header">
+        <div class="calendar__title">
+            <ng-container *ngIf="formCalendarMode.controls.calendarMode.value === 'month'; else calendarModeIsYear">
+                <b>{{ months[selectedMonth] }}</b> {{ selectedYear }}
+            </ng-container>
+        </div>
+        <ng-template #calendarModeIsYear>
+            <b>{{ selectedYear }}</b>
+        </ng-template>
+        <div class="calendar__controls">
+            <div class="calendar__switcher">
+                <form [formGroup]="formCalendarMode" novalidate>
+                    <div class="switcher switcher_labels">
+                        <label class="switcher__el" *ngFor="let mode of calendarModeList" [ngClass]="{'checked': formCalendarMode.controls.calendarMode.value === mode.code}">
+                            <input type="radio" [value]="mode.code" name="calendarMode" formControlName="calendarMode" (change)="onChangeCalendarMode(mode.code)" />
+                            <span>{{ mode.name }}</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="calendar__buttons">
+                <button class="btn btn_icon btn_primary"
+                    (click)="prev()">
+                    <i class="uicon uicon-ln2-chevron-left"></i>
+                </button>
+                <button class="btn" (click)="today()">{{ 'Сегодня' }}</button>
+                <button class="btn btn_icon btn_primary"
+                    (click)="next()">
+                    <i class="uicon uicon-ln2-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="formCalendarMode.controls.calendarMode.value === 'month'">
+        <div class="calendar__month">
+            <app-schedule-month
+                [mode]="'month'"
+                [isShowMonth]="false"
+                [selectedDate]="{year: selectedYear, month: selectedMonth, data: data}"
+                [data]="data"
+            ></app-schedule-month>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="formCalendarMode.controls.calendarMode.value === 'year'">
+        <div class="row">
+            <div class="col col-4 calendar__month" *ngFor="let m of [0,1,2,3,4,5,6,7,8,9,10,11]">
+                <app-schedule-month
+                    [selectedDate]="{year: selectedYear, month: m, data: data}"
+                ></app-schedule-month>
+            </div>
+        </div>
+    </ng-container>
+
+    <app-popup></app-popup>
+</div>

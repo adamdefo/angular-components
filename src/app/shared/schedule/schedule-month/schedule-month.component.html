@@ -1,0 +1,47 @@
+<div class="calendar" [ngClass]="{'calendar_single': mode === Mode.month}">
+  <div class="calendar__month" *ngIf="isShowMonth">{{ months[selectedDate.month] }}</div>
+  <table>
+    <thead>
+        <tr>
+            <th *ngFor="let dw of daysOfWeek">{{ dw }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let row of calendar; let idx = index">
+            <tr>
+                <td *ngFor="let day of row" (click)="onSelectDay(day)">
+                    <div class="calendar__day" 
+                        [ngClass]="{
+                            'calendar__day_current': day.isCurrent,
+                            'calendar__day_no-empty': day.count,
+                            'calendar__day_disabled': day.isDisabled,
+                            'calendar__day_selected': day.isSelected
+                        }"
+                    >
+                        <div class="content">
+                            <span>{{ day.d }}</span>
+                            <i *ngIf="day.count">{{ day.count }}</i>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #tooltip>
+    <div class="popup__body">
+        <div *ngIf="selectedDay.tooltipData.length; else emptyTooltipData">
+            <ul class="checklist">
+                <li class="checklist__item" *ngFor="let t of selectedDay.tooltipData">
+                    <a [routerLink]="['inspections', t.id]">{{ t.name }}</a> <span class="date">{{ t.dateStart | date: 'dd.MM.yyyy HH:MM' }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #emptyTooltipData>
+    <div>нет проверок на этот день</div>
+</ng-template>

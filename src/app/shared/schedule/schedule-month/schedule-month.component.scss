@@ -1,0 +1,178 @@
+@import '@big3/ui-kit/colors/colors.var.scss';
+
+:host {
+    width: 100%;
+}
+
+.calendar {
+    &__month {
+        color: #1D2233;
+        font-size: 1.6rem;
+        font-weight: bold;
+        padding: 1rem 0;
+        text-align: center;
+    }
+    & table {
+        border-collapse: collapse;
+        width: 100%;
+        & thead {
+            background-color: #F4F7FB;
+            border-top: 1px solid #DDE1E6;
+            border-bottom: 1px solid #DDE1E6;
+            & th {
+                color: #848E99;
+                font-size: 1.2rem;
+                line-height: 2rem;
+                letter-spacing: 1px;
+                vertical-align: middle;
+                padding: 1rem 1.2rem;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+        }
+        & tbody {
+            & tr {
+                & > td {
+                    position: relative;
+                    border: 1px solid #EBEDF0;
+                    color: #3B4256;
+                    font-size: 1.4rem;
+                    line-height: 2rem;
+                    height: 5rem;
+                    padding: 0;
+                    text-align: center;
+                    transition: all .3s;
+                    &:first-child {
+                        border-left: 0;
+                    }
+                    &:last-child {
+                        border-right: 0;
+                    }
+                }
+            }
+        }
+    }
+    &_single {
+        & table {
+            & tbody {
+                & tr {
+                    & > td {
+                        font-size: 1.8rem;
+                        line-height: 2.6rem;
+                        height: 11.2rem;
+                    }
+                }
+            }
+        }
+    }
+    &__tooltip {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        & > div {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 12px rgba(95, 95, 95, 0.153646);
+            border-radius: .4rem;
+            font-size: 1.4rem;
+            line-height: 2rem;
+            padding: 2.4rem;
+            max-width: 30rem;
+        }
+        & ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            & li {
+                padding: 0.5rem 0;
+                text-align: left;
+            }
+        }
+    }
+    &__day {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        &_no-empty {
+            &:hover {
+                background-color: #F4F7FB;
+                cursor: pointer;
+            }
+        }
+        &.selected {
+            background-color: #F4F7FB;
+        }
+        &_disabled {
+            & > .content {
+                & > span {
+                    opacity: .5;
+                }
+            }
+        }
+        & > .content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 4rem;
+            height: 4rem;
+            transition: all .3s;
+            & > span {
+                color: #3B4256;
+            }
+            & > i {
+                position: absolute;
+                bottom: 4px;
+                right: -4px;
+                background-color: $danger;
+                border-radius: 1.6rem;
+                color: #FFFFFF;
+                font-size: 1.2rem;
+                font-style: normal;
+                line-height: 1.6rem;
+                min-width: 1.6rem;
+                padding: 0 .4rem;
+                height: 1.6rem;
+            }
+        }
+        &_selected {
+            background-color: #F4F7FB;
+            & .calendar__tooltip {
+                display: block;
+                z-index: 9999;
+            }
+        }
+        &_current {
+            &  > .content {
+                background-color: #C8E4FF;
+            }
+        }
+    }
+}
+
+.checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        & > a {
+            flex: 60%;
+        }
+        & > span.date {
+            text-align: right;
+        }
+    }
+}
